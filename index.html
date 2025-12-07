@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 </head>
 <body data-theme="dark">
 
@@ -59,8 +61,14 @@
             <button onclick="goBack()" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour</button>
             
             <div class="product-layout">
-                <div class="product-image-container">
-                    <img id="detail-img" src="" alt="Produit">
+                <div class="left-col">
+                    <div class="product-image-container">
+                        <img id="detail-img" src="" alt="Produit">
+                    </div>
+                    <div id="map-container">
+                        <p class="map-label"><i class="fa-solid fa-map-pin"></i> Localisation approximative</p>
+                        <div id="map"></div>
+                    </div>
                 </div>
 
                 <div class="product-info-panel">
@@ -81,7 +89,7 @@
                         <i class="fa-solid fa-shield-cat"></i>
                         <div>
                             <strong>Safe Zone Activée</strong><br>
-                            Remise en main propre obligatoire en lieu sécurisé.
+                            Le point sur la carte indique le commissariat pour le RDV.
                         </div>
                     </div>
 
@@ -157,6 +165,7 @@
                 <img id="preview-img" src="" style="display:none;" class="img-preview-box">
             </div>
             <div class="input-wrap"><label>Titre</label><input type="text" id="post-title" placeholder="Ex: Vélo..."></div>
+            <div class="input-wrap"><label>Ville</label><input type="text" id="post-city" placeholder="Ex: Paris"></div>
             <div class="input-wrap"><label>Prix / jour</label><input type="number" id="post-price" placeholder="0"></div>
             <div class="input-wrap"><label>Catégorie</label><select id="post-cat"><option value="tech">Tech</option><option value="luxe">Luxe (Safe Zone)</option><option value="mode">Mode</option></select></div>
             <button class="btn-solid full" onclick="submitAd()">Publier</button>
@@ -174,18 +183,10 @@
     <div id="modal-booking" class="modal-backdrop">
         <div class="modal-box">
             <div class="modal-header"><h3>Dates & Paiement</h3><button class="close-icon" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button></div>
-            
             <div class="date-grid">
-                <div class="input-wrap">
-                    <label>Début</label>
-                    <input type="date" id="start-date" onchange="calculateTotal()">
-                </div>
-                <div class="input-wrap">
-                    <label>Fin</label>
-                    <input type="date" id="end-date" onchange="calculateTotal()">
-                </div>
+                <div class="input-wrap"><label>Début</label><input type="date" id="start-date" onchange="calculateTotal()"></div>
+                <div class="input-wrap"><label>Fin</label><input type="date" id="end-date" onchange="calculateTotal()"></div>
             </div>
-
             <div class="booking-details">
                 <div class="detail-row"><span>Prix journalier</span><span id="price-per-day">0€</span></div>
                 <div class="detail-row"><span>Durée</span><span id="total-days">1 jour</span></div>
@@ -193,15 +194,14 @@
                 <div class="separator-line"></div>
                 <div class="detail-row total-row"><span>Total</span><span id="final-total">0€</span></div>
             </div>
-
             <div id="modal-safe-msg" class="safe-zone-box" style="display:none; margin-bottom:20px;">
                 <i class="fa-solid fa-building-shield"></i> <strong>Safe Zone :</strong> RDV sécurisé obligatoire.
             </div>
-            
             <button class="btn-solid full" onclick="confirmPayment()">Confirmer</button>
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="script.js"></script>
 </body>
 </html>

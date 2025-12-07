@@ -1,5 +1,5 @@
 :root {
-  /* DARK (Défaut) */
+  /* DARK */
   --bg: #0d0d0d;
   --surface: #171717;
   --surface-hover: #262626;
@@ -13,7 +13,7 @@
   --nav-bg: rgba(13, 13, 13, 0.9);
 }
 
-/* LIGHT MODE */
+/* LIGHT */
 [data-theme="light"] {
   --bg: #ffffff;
   --surface: #f4f4f5;
@@ -73,13 +73,18 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .safe-zone-box { background: var(--safe-bg); border: 1px solid var(--safe-text); color: var(--safe-text); padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; line-height: 1.5; }
 .safe-icon-card { font-size: 12px; color: var(--safe-text); }
 
-/* PRODUCT DETAIL */
+/* PRODUCT DETAIL & MAP */
 .back-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
 .back-btn:hover { color: var(--text); }
 .product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-@media (max-width: 768px) { .product-layout { grid-template-columns: 1fr; } }
-.product-image-container { border-radius: 12px; overflow: hidden; background: var(--surface); height: 400px; }
+.product-image-container { border-radius: 12px; overflow: hidden; background: var(--surface); height: 400px; margin-bottom: 20px; }
 .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Style de la carte */
+#map-container { margin-top: 10px; }
+.map-label { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+#map { width: 100%; height: 250px; border-radius: 12px; z-index: 1; border: 1px solid var(--border); }
+
 .product-header h2 { font-weight: 500; font-size: 28px; margin: 0 0 10px 0; }
 .detail-price { font-size: 24px; font-weight: 600; color: var(--text); }
 .product-meta { color: var(--text-dim); font-size: 14px; margin-bottom: 20px; }

@@ -1,22 +1,44 @@
-// --- GESTION DE LA MÉMOIRE ---
-const defaultItems = [
-  { id: 1, title: "Rolex Submariner", desc: "Montre de luxe avec certificat. Remise en main propre.", city: "Paris 8e", category: "luxe", price: 150, likes: 42, user: "Stan M.", userAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80", isSafeZone: true, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80" },
-  { id: 2, title: "Robe Soirée (3j)", desc: "Robe de créateur. Taille 38.", city: "Lyon", category: "mode", price: 40, likes: 128, user: "Sophie L.", userAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80", isSafeZone: false, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=500&q=80" },
-  { id: 3, title: "Canon EOS R6", desc: "Boîtier nu + 50mm.", city: "Paris", category: "tech", price: 45, likes: 15, user: "Stan M.", isSafeZone: true, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=500&q=80" },
-  { id: 4, title: "Sac Gucci", desc: "Modèle Dionysus.", city: "Bordeaux", category: "luxe", price: 65, likes: 89, user: "Clara M.", isSafeZone: true, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80" },
-  { id: 5, title: "Drone DJI Mini", desc: "Fly More Combo.", city: "Marseille", category: "tech", price: 30, likes: 33, user: "Marc D.", isSafeZone: false, img: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=500&q=80" },
+// --- DATA (Avec Coordonnées GPS) ---
+const items = [
+  { 
+    id: 1, 
+    title: "Rolex Submariner", 
+    desc: "Montre de luxe authentique. Remise en main propre obligatoire.",
+    city: "Paris 8e",
+    lat: 48.866, lng: 2.312, // Champs-Élysées
+    category: "luxe", price: 150, likes: 42, user: "Stan M.", 
+    userAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
+    isSafeZone: true, 
+    img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80" 
+  },
+  { 
+    id: 2, 
+    title: "Robe Soirée (3j)", 
+    desc: "Robe de créateur portée une fois. Taille 38.",
+    city: "Lyon",
+    lat: 45.764, lng: 4.835,
+    category: "mode", price: 40, likes: 128, user: "Sophie L.", 
+    userAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80",
+    isSafeZone: false, 
+    img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=500&q=80" 
+  },
+  { id: 3, title: "Canon EOS R6", desc: "Boîtier nu + 50mm.", city: "Paris", lat: 48.856, lng: 2.352, category: "tech", price: 45, likes: 15, user: "Stan M.", isSafeZone: true, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=500&q=80" },
+  { id: 4, title: "Sac Gucci", desc: "Modèle Dionysus.", city: "Bordeaux", lat: 44.837, lng: -0.579, category: "luxe", price: 65, likes: 89, user: "Clara M.", isSafeZone: true, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=80" },
+  { id: 5, title: "Drone DJI Mini", desc: "Pack Fly More.", city: "Marseille", lat: 43.296, lng: 5.369, category: "tech", price: 30, likes: 33, user: "Marc D.", isSafeZone: false, img: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=500&q=80" },
 ];
 
-let items = JSON.parse(localStorage.getItem('rentSphere_items')) || defaultItems;
+let map; // Variable pour la carte
+
+let itemsData = JSON.parse(localStorage.getItem('rentSphere_items')) || items;
 let favorites = JSON.parse(localStorage.getItem('rentSphere_favs')) || [];
 
 function saveData() {
-    localStorage.setItem('rentSphere_items', JSON.stringify(items));
+    localStorage.setItem('rentSphere_items', JSON.stringify(itemsData));
     localStorage.setItem('rentSphere_favs', JSON.stringify(favorites));
 }
 
 let currentDetailId = null;
-let currentDailyPrice = 0; // Pour le calcul
+let currentDailyPrice = 0;
 
 // --- NAVIGATION ---
 function showPage(pageId) {
@@ -27,13 +49,13 @@ function showPage(pageId) {
     const indexMap = { 'home':0, 'search':1, 'chat':2, 'profile':3 };
     if(indexMap[pageId] !== undefined) document.querySelectorAll('.nav-link')[indexMap[pageId]].classList.add('active');
 
-    if(pageId === 'home') renderGrid(items, 'products-grid');
-    if(pageId === 'search') renderGrid(items, 'search-results');
+    if(pageId === 'home') renderGrid(itemsData, 'products-grid');
+    if(pageId === 'search') renderGrid(itemsData, 'search-results');
     if(pageId === 'profile') renderFavorites();
 }
 function goBack() { showPage('home'); }
 
-// --- RENDER GRID ---
+// --- RENDER ---
 function renderGrid(data, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
@@ -52,7 +74,7 @@ function renderGrid(data, containerId) {
         div.innerHTML = `
             <div class="card-img-wrap">
                 <div class="like-overlay ${heartClass}" onclick="toggleLike(event, ${item.id})">
-                    <i class="${heartIcon}"></i> <span>${item.likes}</span>
+                    <i class="${heartIcon}"></i> <span>${item.likes || 0}</span>
                 </div>
                 <img src="${item.img}" class="card-img">
             </div>
@@ -68,9 +90,9 @@ function renderGrid(data, containerId) {
     });
 }
 
-// --- PRODUCT DETAIL ---
+// --- PRODUCT DETAIL & MAP ---
 function openProductPage(id) {
-    const item = items.find(i => i.id === id);
+    const item = itemsData.find(i => i.id === id);
     if(!item) return;
     currentDetailId = item.id;
 
@@ -86,11 +108,40 @@ function openProductPage(id) {
     else document.getElementById('detail-avatar').style.backgroundColor = "#ccc";
 
     document.getElementById('detail-safe-alert').style.display = item.isSafeZone ? 'flex' : 'none';
+    
     showPage('product');
+
+    // INITIALISATION CARTE LEAFLET
+    // On attend un tout petit peu que la page soit affichée
+    setTimeout(() => {
+        // Si une carte existe déjà, on la supprime pour en refaire une propre
+        if (map) {
+            map.remove();
+            map = null;
+        }
+
+        // Coordonnées par défaut (Paris) si l'item n'en a pas
+        const lat = item.lat || 48.8566;
+        const lng = item.lng || 2.3522;
+
+        // Création de la carte
+        map = L.map('map').setView([lat, lng], 13);
+
+        // Ajout des tuiles (le fond de carte OpenStreetMap)
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Ajout du marqueur
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup(item.isSafeZone ? "<b>Safe Zone</b><br>Commissariat" : "<b>Lieu de RDV</b><br>" + item.city)
+            .openPopup();
+    }, 100);
 }
 
 function openBookingFromDetail() {
-    const item = items.find(i => i.id === currentDetailId);
+    const item = itemsData.find(i => i.id === currentDetailId);
     openBooking(item.title, item.price, item.isSafeZone);
 }
 function openBookingFromCard(e, title, price, isSafe) {
@@ -98,45 +149,35 @@ function openBookingFromCard(e, title, price, isSafe) {
     openBooking(title, price, isSafe);
 }
 
-// --- CALENDRIER & PRIX ---
+// --- CALC & BOOKING ---
 function calculateTotal() {
     const startInput = document.getElementById('start-date').value;
     const endInput = document.getElementById('end-date').value;
-    const fees = 5; // Frais fixes
-
+    const fees = 5;
     if (startInput && endInput) {
         const start = new Date(startInput);
         const end = new Date(endInput);
         const timeDiff = end - start;
         let days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-        if (days < 1) days = 1; // Minimum 1 jour
-
+        if (days < 1) days = 1;
         const total = (days * currentDailyPrice) + fees;
-        
         document.getElementById('total-days').innerText = days + " jour(s)";
         document.getElementById('final-total').innerText = total + "€";
-    } else {
-        document.getElementById('total-days').innerText = "-";
-        document.getElementById('final-total').innerText = "-";
     }
 }
 
 function openBooking(title, price, isSafe) {
-    currentDailyPrice = price; // On stocke le prix
+    currentDailyPrice = price;
     document.getElementById('price-per-day').innerText = price + "€";
     document.getElementById('total-days').innerText = "-";
     document.getElementById('final-total').innerText = "-";
-    
-    // Reset dates
     document.getElementById('start-date').value = "";
     document.getElementById('end-date').value = "";
-
     document.getElementById('modal-safe-msg').style.display = isSafe ? 'flex' : 'none';
     document.getElementById('modal-booking').style.display = 'block';
 }
 
-// --- UPLOAD IMAGE ---
+// --- UPLOAD & POST ---
 function previewImage() {
     const fileInput = document.getElementById('post-file');
     const preview = document.getElementById('preview-img');
@@ -153,6 +194,7 @@ function previewImage() {
 
 function submitAd() {
     const title = document.getElementById('post-title').value;
+    const city = document.getElementById('post-city').value || "Paris";
     const price = document.getElementById('post-price').value;
     const cat = document.getElementById('post-cat').value;
     const fileInput = document.getElementById('post-file');
@@ -166,7 +208,8 @@ function submitAd() {
             id: Date.now(), 
             title: title, 
             desc: "Ajouté depuis l'application.",
-            city: "Paris", 
+            city: city, 
+            lat: 48.8566, lng: 2.3522, // Par défaut Paris pour les nouvelles annonces
             category: cat, 
             price: parseInt(price), 
             likes: 0,
@@ -175,13 +218,9 @@ function submitAd() {
             isSafeZone: isSafe,
             img: imgSrc
         };
-        items.unshift(newItem);
+        itemsData.unshift(newItem);
         saveData();
         closeModal('modal-post'); 
-        document.getElementById('post-title').value = '';
-        document.getElementById('post-price').value = '';
-        document.getElementById('post-file').value = '';
-        document.getElementById('preview-img').style.display = 'none';
         showPage('home');
     };
 
@@ -191,31 +230,4 @@ function submitAd() {
         reader.onload = function(e) { createItem(e.target.result); };
         reader.readAsDataURL(file);
     } else {
-        createItem("https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=500&q=80");
-    }
-}
-
-// --- UTILS ---
-function toggleTheme() {
-    const body = document.body;
-    const icon = document.getElementById('theme-icon');
-    let newTheme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    body.setAttribute('data-theme', newTheme);
-    icon.className = newTheme === 'light' ? 'fa-regular fa-sun' : 'fa-regular fa-moon';
-}
-function confirmPayment() { alert("Réservation envoyée !"); closeModal('modal-booking'); }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function openCharter() { document.getElementById('modal-charter').style.display = 'block'; }
-function goToPostForm() { closeModal('modal-charter'); document.getElementById('modal-post').style.display = 'block'; }
-function toggleLike(e, id) { e.stopPropagation(); const item = items.find(i => i.id === id); if(favorites.includes(id)) { favorites = favorites.filter(f => f !== id); item.likes--; } else { favorites.push(id); item.likes++; } saveData(); const active = document.querySelector('.page-section[style*="block"]').id; if(active === 'page-home') renderGrid(items, 'products-grid'); if(active === 'page-profile') renderFavorites(); if(active === 'page-search') renderGrid(items, 'search-results'); }
-function renderFavorites() { const favItems = items.filter(i => favorites.includes(i.id)); const container = document.getElementById('favorites-grid'); if(favItems.length === 0) container.innerHTML = '<p style="text-align:center; color:gray; width:100%;">Aucun favori.</p>'; else renderGrid(favItems, 'favorites-grid'); }
-function filterItems(cat) { document.querySelectorAll('.chip').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); const filtered = cat === 'all' ? items : items.filter(i => i.category === cat); renderGrid(filtered, 'products-grid'); }
-function switchTab(tab) { document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); document.getElementById('tab-reviews').style.display = tab === 'reviews' ? 'block' : 'none'; document.getElementById('tab-favs').style.display = tab === 'favs' ? 'block' : 'none'; if(tab === 'favs') renderFavorites(); }
-const reviews = [{ author: "Julie M.", text: "Transaction parfaite.", stars: 5 }, { author: "Thomas L.", text: "Matériel top.", stars: 5 }];
-const reviewList = document.getElementById('reviews-list'); if(reviewList) { reviewList.innerHTML = ''; reviews.forEach(rev => { reviewList.innerHTML += `<div style="border-bottom:1px solid var(--border); padding:15px 0;"><div style="font-weight:500; margin-bottom:5px;">${rev.author} ⭐${rev.stars}</div><div style="color:var(--text-dim); font-size:14px;">"${rev.text}"</div></div>`; }); }
-window.onclick = function(e) { if(e.target.classList.contains('modal-backdrop')) e.target.style.display = "none"; }
-setTimeout(() => { document.getElementById('notif-dot').style.display = 'block'; document.getElementById('new-msg').style.display = 'flex'; }, 3000);
-function readMessage() { document.getElementById('notif-dot').style.display = 'none'; document.getElementById('new-msg').style.background = 'transparent'; document.querySelector('.unread-circle').style.display = 'none'; }
-
-// INIT
-renderGrid(items, 'products-grid');
+        createItem("
