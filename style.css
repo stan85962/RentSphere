@@ -77,13 +77,12 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .back-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
 .back-btn:hover { color: var(--text); }
 .product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 768px) { .product-layout { grid-template-columns: 1fr; } }
 .product-image-container { border-radius: 12px; overflow: hidden; background: var(--surface); height: 400px; margin-bottom: 20px; }
 .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Style de la carte */
-#map-container { margin-top: 10px; }
-.map-label { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
-#map { width: 100%; height: 250px; border-radius: 12px; z-index: 1; border: 1px solid var(--border); }
+/* Carte */
+#map { width: 100%; height: 250px; border-radius: 12px; border: 1px solid var(--border); z-index: 1; }
 
 .product-header h2 { font-weight: 500; font-size: 28px; margin: 0 0 10px 0; }
 .detail-price { font-size: 24px; font-weight: 600; color: var(--text); }
@@ -97,7 +96,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .seller-rating { font-size: 12px; color: var(--text-dim); }
 .full-large { width: 100%; padding: 15px; font-size: 16px; margin-top: 20px; }
 
-/* DATE PICKER & BOOKING */
+/* DATE PICKER */
 .date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
 .booking-details { background: var(--surface); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
 .detail-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
