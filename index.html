@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentSphere</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="dark">
+
+    <div class="ambient-light"></div>
+
+    <nav class="minimal-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <span class="logo-text">RentSphere</span><span class="dot"></span>
+            </div>
+        </div>
+        
+        <div class="nav-center">
+            <button onclick="showPage('home')" class="nav-link active"><i class="fa-solid fa-house"></i></button>
+            <button onclick="showPage('search')" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button onclick="showPage('chat')" class="nav-link relative">
+                <i class="fa-regular fa-comment"></i>
+                <span id="notif-dot" class="dot-indicator" style="display:none;"></span>
+            </button>
+            <button onclick="showPage('profile')" class="nav-link"><i class="fa-regular fa-user"></i></button>
+        </div>
+
+        <div class="nav-right">
+            <button onclick="toggleTheme()" class="icon-btn"><i id="theme-icon" class="fa-regular fa-moon"></i></button>
+            <button onclick="openCharter()" class="btn-solid">
+                <i class="fa-solid fa-plus"></i> <span class="btn-text">Déposer</span>
+            </button>
+        </div>
+    </nav>
+
+    <section id="page-home" class="page-section active">
+        <header class="hero-minimal">
+            <h1>Louez tout.<br><span class="text-muted">N'achetez rien.</span></h1>
+        </header>
+        <div class="filters-minimal">
+            <button onclick="filterItems('all')" class="chip active">Tout</button>
+            <button onclick="filterItems('luxe')" class="chip">Luxe</button>
+            <button onclick="filterItems('tech')" class="chip">Tech</button>
+            <button onclick="filterItems('mode')" class="chip">Mode</button>
+        </div>
+        <div class="container">
+            <div id="products-grid" class="grid-clean"></div>
+        </div>
+    </section>
+
+    <section id="page-search" class="page-section" style="display:none;">
+        <div class="container">
+            <div class="search-block">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" placeholder="Rechercher...">
+            </div>
+            <div id="search-results" class="grid-clean"></div>
+        </div>
+    </section>
+
+    <section id="page-product" class="page-section" style="display:none;">
+        <div class="container">
+            <button onclick="goBack()" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+            
+            <div class="product-layout">
+                <div class="product-image-container">
+                    <img id="detail-img" src="" alt="Produit">
+                </div>
+
+                <div class="product-info-panel">
+                    <div class="product-header">
+                        <h2 id="detail-title">Titre</h2>
+                        <span id="detail-price" class="detail-price">0€</span>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <span id="detail-city"><i class="fa-solid fa-location-dot"></i> Ville</span>
+                        <span class="divider">•</span>
+                        <span id="detail-cat">Catégorie</span>
+                    </div>
+
+                    <div class="separator-line"></div>
+
+                    <div id="detail-safe-alert" class="safe-zone-box" style="display:none;">
+                        <i class="fa-solid fa-shield-cat"></i>
+                        <div>
+                            <strong>Safe Zone Activée</strong><br>
+                            Remise en main propre obligatoire en lieu sécurisé.
+                        </div>
+                    </div>
+
+                    <p class="section-label">Description</p>
+                    <p id="detail-desc" class="product-desc">Description...</p>
+
+                    <div class="separator-line"></div>
+
+                    <div class="seller-block">
+                        <div class="seller-avatar" id="detail-avatar"></div>
+                        <div>
+                            <div id="detail-user" class="seller-name">Nom</div>
+                            <div class="seller-rating">⭐⭐⭐⭐⭐ (42 avis)</div>
+                        </div>
+                    </div>
+
+                    <button class="btn-solid full-large" onclick="openBookingFromDetail()">Réserver maintenant</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="page-chat" class="page-section" style="display:none;">
+        <div class="container chat-container">
+            <h2 class="section-title">Messagerie</h2>
+            <div class="chat-list">
+                <div id="new-msg" class="chat-row new" style="display:none;" onclick="readMessage()">
+                    <div class="chat-avatar" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80');"></div>
+                    <div class="chat-content">
+                        <div class="chat-top"><span class="chat-name">Chloé</span><span class="chat-meta">1 min</span></div>
+                        <p class="chat-preview">Le RDV se fait où pour la montre ?</p>
+                    </div>
+                    <div class="unread-circle"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="page-profile" class="page-section" style="display:none;">
+        <div class="container">
+            <div class="profile-minimal">
+                <div class="profile-left">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80" class="profile-pic">
+                </div>
+                <div class="profile-right">
+                    <h2>Stan M. <i class="fa-solid fa-circle-check verified-color"></i></h2>
+                    <p class="profile-bio">Membre depuis 2023</p>
+                </div>
+            </div>
+            <div class="tabs-minimal">
+                <button class="tab-link active" onclick="switchTab('reviews')">Avis</button>
+                <button class="tab-link" onclick="switchTab('favs')">Favoris</button>
+            </div>
+            <div id="tab-reviews" class="tab-content"><div id="reviews-list"></div></div>
+            <div id="tab-favs" class="tab-content" style="display:none;"><div id="favorites-grid" class="grid-clean"></div></div>
+        </div>
+    </section>
+
+    <div id="modal-post" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Nouvelle annonce</h3>
+                <button class="close-icon" onclick="closeModal('modal-post')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="input-wrap">
+                <label>Photo</label>
+                <div class="file-upload-wrapper">
+                    <label for="post-file" class="file-upload-btn">
+                        <i class="fa-solid fa-camera"></i> Choisir une photo
+                    </label>
+                    <input type="file" id="post-file" accept="image/*" onchange="previewImage()">
+                </div>
+                <img id="preview-img" src="" style="display:none;" class="img-preview-box">
+            </div>
+
+            <div class="input-wrap"><label>Titre</label><input type="text" id="post-title" placeholder="Ex: Vélo..."></div>
+            <div class="input-wrap"><label>Prix / jour</label><input type="number" id="post-price" placeholder="0"></div>
+            <div class="input-wrap"><label>Catégorie</label><select id="post-cat"><option value="tech">Tech</option><option value="luxe">Luxe (Safe Zone)</option><option value="mode">Mode</option></select></div>
+            
+            <button class="btn-solid full" onclick="submitAd()">Publier</button>
+        </div>
+    </div>
+
+    <div id="modal-charter" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header"><h3>Règles</h3><button class="close-icon" onclick="closeModal('modal-charter')"><i class="fa-solid fa-xmark"></i></button></div>
+            <ul class="clean-list"><li>Pas de contrefaçon</li><li>Safe Zone obligatoire pour le luxe</li></ul>
+            <button class="btn-solid full" onclick="goToPostForm()">Accepter</button>
+        </div>
+    </div>
+
+    <div id="modal-booking" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header"><h3>Paiement</h3><button class="close-icon" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="booking-details">Total à payer : <span id="book-total">0€</span></div>
+            <div id="modal-safe-msg" class="safe-zone-box" style="display:none; margin-bottom:20px;">
+                <i class="fa-solid fa-building-shield"></i> <strong>Safe Zone :</strong> RDV sécurisé obligatoire.
+            </div>
+            <button class="btn-solid full" onclick="confirmPayment()">Confirmer</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
