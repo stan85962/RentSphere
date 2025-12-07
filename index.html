@@ -13,12 +13,7 @@
     <div class="ambient-light"></div>
 
     <nav class="minimal-nav">
-        <div class="nav-left">
-            <div class="logo">
-                <span class="logo-text">RentSphere</span><span class="dot"></span>
-            </div>
-        </div>
-        
+        <div class="nav-left"><div class="logo">RentSphere</div></div>
         <div class="nav-center">
             <button onclick="showPage('home')" class="nav-link active"><i class="fa-solid fa-house"></i></button>
             <button onclick="showPage('search')" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -28,12 +23,9 @@
             </button>
             <button onclick="showPage('profile')" class="nav-link"><i class="fa-regular fa-user"></i></button>
         </div>
-
         <div class="nav-right">
             <button onclick="toggleTheme()" class="icon-btn"><i id="theme-icon" class="fa-regular fa-moon"></i></button>
-            <button onclick="openCharter()" class="btn-solid">
-                <i class="fa-solid fa-plus"></i> <span class="btn-text">Déposer</span>
-            </button>
+            <button onclick="openCharter()" class="btn-solid">Déposer</button>
         </div>
     </nav>
 
@@ -154,7 +146,6 @@
                 <h3>Nouvelle annonce</h3>
                 <button class="close-icon" onclick="closeModal('modal-post')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
             <div class="input-wrap">
                 <label>Photo</label>
                 <div class="file-upload-wrapper">
@@ -165,11 +156,9 @@
                 </div>
                 <img id="preview-img" src="" style="display:none;" class="img-preview-box">
             </div>
-
             <div class="input-wrap"><label>Titre</label><input type="text" id="post-title" placeholder="Ex: Vélo..."></div>
             <div class="input-wrap"><label>Prix / jour</label><input type="number" id="post-price" placeholder="0"></div>
             <div class="input-wrap"><label>Catégorie</label><select id="post-cat"><option value="tech">Tech</option><option value="luxe">Luxe (Safe Zone)</option><option value="mode">Mode</option></select></div>
-            
             <button class="btn-solid full" onclick="submitAd()">Publier</button>
         </div>
     </div>
@@ -184,11 +173,31 @@
 
     <div id="modal-booking" class="modal-backdrop">
         <div class="modal-box">
-            <div class="modal-header"><h3>Paiement</h3><button class="close-icon" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button></div>
-            <div class="booking-details">Total à payer : <span id="book-total">0€</span></div>
+            <div class="modal-header"><h3>Dates & Paiement</h3><button class="close-icon" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button></div>
+            
+            <div class="date-grid">
+                <div class="input-wrap">
+                    <label>Début</label>
+                    <input type="date" id="start-date" onchange="calculateTotal()">
+                </div>
+                <div class="input-wrap">
+                    <label>Fin</label>
+                    <input type="date" id="end-date" onchange="calculateTotal()">
+                </div>
+            </div>
+
+            <div class="booking-details">
+                <div class="detail-row"><span>Prix journalier</span><span id="price-per-day">0€</span></div>
+                <div class="detail-row"><span>Durée</span><span id="total-days">1 jour</span></div>
+                <div class="detail-row"><span>Frais de service</span><span>5€</span></div>
+                <div class="separator-line"></div>
+                <div class="detail-row total-row"><span>Total</span><span id="final-total">0€</span></div>
+            </div>
+
             <div id="modal-safe-msg" class="safe-zone-box" style="display:none; margin-bottom:20px;">
                 <i class="fa-solid fa-building-shield"></i> <strong>Safe Zone :</strong> RDV sécurisé obligatoire.
             </div>
+            
             <button class="btn-solid full" onclick="confirmPayment()">Confirmer</button>
         </div>
     </div>
