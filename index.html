@@ -114,13 +114,28 @@
         <div class="container">
             <div class="profile-minimal">
                 <div class="profile-left">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80" class="profile-pic">
+                    <div class="avatar-edit-wrapper" onclick="document.getElementById('profile-file-input').click()">
+                        <img id="my-profile-pic" src="" class="profile-pic">
+                        <div class="edit-overlay-icon"><i class="fa-solid fa-camera"></i></div>
+                    </div>
+                    <input type="file" id="profile-file-input" style="display:none;" accept="image/*" onchange="updateProfilePic(this)">
                 </div>
+                
                 <div class="profile-right">
-                    <h2>Stan M. <i class="fa-solid fa-circle-check verified-color"></i></h2>
-                    <p class="profile-bio">Membre depuis 2023 • Paris</p>
-                    <div class="wallet-badge">
-                        <i class="fa-solid fa-wallet"></i> Solde : <strong>145,00 €</strong>
+                    <div class="profile-name-row">
+                        <h2 id="my-username">Stan M.</h2>
+                        <i class="fa-solid fa-circle-check verified-color"></i>
+                    </div>
+                    
+                    <p class="last-seen">Vu il y a <span id="last-seen-time">5 minutes</span></p>
+                    
+                    <div class="profile-bio-box">
+                        <p id="my-bio" class="bio-text">Passionné de tech et de mode. Je prends soin de mes affaires ! 🌟</p>
+                    </div>
+
+                    <div class="profile-actions-row">
+                        <button class="btn-outline-small" onclick="openEditProfile()">Modifier le profil</button>
+                        <div class="wallet-badge"><i class="fa-solid fa-wallet"></i> <strong>145,00 €</strong></div>
                     </div>
                 </div>
             </div>
@@ -131,19 +146,26 @@
                 <button class="tab-link" onclick="switchTab('reviews')">Avis (42)</button>
             </div>
 
-            <div id="tab-listings" class="tab-content">
-                <div id="mylistings-grid" class="grid-clean"></div>
-            </div>
-            
-            <div id="tab-favs" class="tab-content" style="display:none;">
-                <div id="favorites-grid" class="grid-clean"></div>
-            </div>
-
-            <div id="tab-reviews" class="tab-content" style="display:none;">
-                <div id="reviews-list"></div>
-            </div>
+            <div id="tab-listings" class="tab-content"><div id="mylistings-grid" class="grid-clean"></div></div>
+            <div id="tab-favs" class="tab-content" style="display:none;"><div id="favorites-grid" class="grid-clean"></div></div>
+            <div id="tab-reviews" class="tab-content" style="display:none;"><div id="reviews-list"></div></div>
         </div>
     </section>
+
+    <div id="modal-edit-profile" class="modal-backdrop">
+        <div class="modal-box">
+            <div class="modal-header"><h3>Modifier mon profil</h3><button class="close-icon" onclick="closeModal('modal-edit-profile')"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="input-wrap">
+                <label>Nom d'utilisateur</label>
+                <input type="text" id="edit-username-input">
+            </div>
+            <div class="input-wrap">
+                <label>À propos de moi (Bio)</label>
+                <textarea id="edit-bio-input" rows="4" class="textarea-field"></textarea>
+            </div>
+            <button class="btn-solid full" onclick="saveProfileChanges()">Enregistrer</button>
+        </div>
+    </div>
 
     <div id="modal-post" class="modal-backdrop">
         <div class="modal-box">

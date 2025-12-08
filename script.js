@@ -1,4 +1,4 @@
-// --- DATA ---
+// --- DATA (Avec GPS) ---
 const defaultItems = [
   { id: 1, title: "Rolex Submariner", desc: "Montre authentique. Remise en main propre.", city: "Paris 8e", lat: 48.866, lng: 2.312, category: "luxe", price: 150, likes: 42, user: "Stan M.", userAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80", isSafeZone: true, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=500&q=80" },
   { id: 2, title: "Robe Soirée (3j)", desc: "Robe de créateur. Taille 38.", city: "Lyon", lat: 45.764, lng: 4.835, category: "mode", price: 40, likes: 128, user: "Sophie L.", userAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80", isSafeZone: false, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=500&q=80" },
@@ -10,14 +10,31 @@ const defaultItems = [
 let itemsData = JSON.parse(localStorage.getItem('rentSphere_items')) || defaultItems;
 let favorites = JSON.parse(localStorage.getItem('rentSphere_favs')) || [];
 
+// PROFIL PAR DÉFAUT
+const defaultProfile = {
+    username: "Stan M.",
+    bio: "Passionné de tech et de mode. Je prends soin de mes affaires ! 🌟",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80",
+    lastSeen: "5 minutes"
+};
+let userProfile = JSON.parse(localStorage.getItem('rentSphere_profile')) || defaultProfile;
+
 function saveData() {
     localStorage.setItem('rentSphere_items', JSON.stringify(itemsData));
     localStorage.setItem('rentSphere_favs', JSON.stringify(favorites));
+    localStorage.setItem('rentSphere_profile', JSON.stringify(userProfile));
 }
 
 let currentDetailId = null;
 let currentDailyPrice = 0;
 let map;
+
+// --- INITIALISATION ---
+function init() {
+    // Charger le profil
+    updateProfileUI();
+    renderGrid(itemsData, 'products-grid');
+}
 
 // --- NAVIGATION ---
 function showPage(pageId) {
@@ -31,13 +48,48 @@ function showPage(pageId) {
     if(pageId === 'home') renderGrid(itemsData, 'products-grid');
     if(pageId === 'search') renderGrid(itemsData, 'search-results');
     if(pageId === 'profile') {
-        renderMyListings(); // Affiche mes annonces par défaut
-        switchTab('listings'); // Force l'onglet actif
+        renderMyListings(); 
+        switchTab('listings');
     }
 }
 function goBack() { showPage('home'); }
 
-// --- RENDER GRID (TOUT) ---
+// --- GESTION PROFIL ---
+function updateProfileUI() {
+    document.getElementById('my-username').innerText = userProfile.username;
+    document.getElementById('my-bio').innerText = userProfile.bio;
+    document.getElementById('my-profile-pic').src = userProfile.avatar;
+    document.getElementById('last-seen-time').innerText = userProfile.lastSeen;
+}
+
+function openEditProfile() {
+    document.getElementById('edit-username-input').value = userProfile.username;
+    document.getElementById('edit-bio-input').value = userProfile.bio;
+    document.getElementById('modal-edit-profile').style.display = 'block';
+}
+
+function saveProfileChanges() {
+    userProfile.username = document.getElementById('edit-username-input').value;
+    userProfile.bio = document.getElementById('edit-bio-input').value;
+    saveData();
+    updateProfileUI();
+    closeModal('modal-edit-profile');
+}
+
+function updateProfilePic(input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            userProfile.avatar = e.target.result;
+            saveData();
+            updateProfileUI();
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// --- RENDER GRID ---
 function renderGrid(data, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
@@ -72,72 +124,47 @@ function renderGrid(data, containerId) {
     });
 }
 
-// --- RENDER MY LISTINGS (MES ANNONCES) ---
 function renderMyListings() {
-    // On filtre uniquement les objets de "Stan M."
-    const myItems = itemsData.filter(i => i.user === "Stan M.");
+    const myItems = itemsData.filter(i => i.user === "Stan M." || i.user === userProfile.username);
     const container = document.getElementById('mylistings-grid');
     container.innerHTML = '';
-
-    if(myItems.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:gray; width:100%;">Vous n\'avez aucune annonce.</p>';
-        return;
-    }
-
+    if(myItems.length === 0) { container.innerHTML = '<p style="text-align:center; color:gray; width:100%;">Vous n\'avez aucune annonce.</p>'; return; }
     myItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'card';
-        // Pas de clic vers détail, c'est de la gestion
         div.innerHTML = `
-            <div class="card-img-wrap">
-                <img src="${item.img}" class="card-img">
-            </div>
+            <div class="card-img-wrap"><img src="${item.img}" class="card-img"></div>
             <div class="card-info">
-                <div class="card-header">
-                    <h3 class="card-title">${item.title}</h3>
-                    <div class="card-price">${item.price}€</div>
-                </div>
+                <div class="card-header"><h3 class="card-title">${item.title}</h3><div class="card-price">${item.price}€</div></div>
                 <button class="btn-card-action btn-delete" onclick="deleteItem(${item.id})">Supprimer</button>
-            </div>
-        `;
+            </div>`;
         container.appendChild(div);
     });
 }
 
 function deleteItem(id) {
-    if(confirm("Voulez-vous vraiment supprimer cette annonce ?")) {
+    if(confirm("Supprimer cette annonce ?")) {
         itemsData = itemsData.filter(i => i.id !== id);
         saveData();
-        renderMyListings(); // Rafraîchir la liste
+        renderMyListings();
     }
 }
 
-// --- ACTIONS PROFIL ---
+// --- ACTIONS ---
 function switchTab(tab) {
     document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
-    
-    document.getElementById('tab-listings').style.display = 'none';
-    document.getElementById('tab-favs').style.display = 'none';
-    document.getElementById('tab-reviews').style.display = 'none';
-
-    if (tab === 'listings') {
-        document.getElementById('tab-listings').style.display = 'block';
-        renderMyListings();
-    } else if (tab === 'favs') {
-        document.getElementById('tab-favs').style.display = 'block';
-        renderFavorites();
-    } else if (tab === 'reviews') {
-        document.getElementById('tab-reviews').style.display = 'block';
-    }
+    document.getElementById('tab-listings').style.display = tab === 'listings' ? 'block' : 'none';
+    document.getElementById('tab-favs').style.display = tab === 'favs' ? 'block' : 'none';
+    document.getElementById('tab-reviews').style.display = tab === 'reviews' ? 'block' : 'none';
+    if(tab === 'listings') renderMyListings();
+    if(tab === 'favs') renderFavorites();
 }
 
-// --- PRODUCT DETAIL & MAP ---
 function openProductPage(id) {
     const item = itemsData.find(i => i.id === id);
     if(!item) return;
     currentDetailId = item.id;
-
     document.getElementById('detail-img').src = item.img;
     document.getElementById('detail-title').innerText = item.title;
     document.getElementById('detail-price').innerText = item.price + "€ /jour";
@@ -146,7 +173,8 @@ function openProductPage(id) {
     document.getElementById('detail-desc').innerText = item.desc || "Pas de description.";
     document.getElementById('detail-user').innerText = item.user;
     
-    if(item.userAvatar) document.getElementById('detail-avatar').style.backgroundImage = `url('${item.userAvatar}')`;
+    if(item.user === "Stan M.") document.getElementById('detail-avatar').style.backgroundImage = `url('${userProfile.avatar}')`;
+    else if(item.userAvatar) document.getElementById('detail-avatar').style.backgroundImage = `url('${item.userAvatar}')`;
     else document.getElementById('detail-avatar').style.backgroundColor = "#ccc";
 
     document.getElementById('detail-safe-alert').style.display = item.isSafeZone ? 'flex' : 'none';
@@ -154,22 +182,15 @@ function openProductPage(id) {
 
     setTimeout(() => {
         if (map) { map.remove(); map = null; }
-        const lat = item.lat || 48.8566;
-        const lng = item.lng || 2.3522;
+        const lat = item.lat || 48.8566; const lng = item.lng || 2.3522;
         map = L.map('map').setView([lat, lng], 13);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
         L.marker([lat, lng]).addTo(map).bindPopup(item.isSafeZone ? "<b>Safe Zone</b><br>Commissariat" : "<b>Lieu de RDV</b><br>" + item.city).openPopup();
     }, 200);
 }
 
-function openBookingFromDetail() {
-    const item = itemsData.find(i => i.id === currentDetailId);
-    openBooking(item.title, item.price, item.isSafeZone);
-}
-function openBookingFromCard(e, title, price, isSafe) {
-    e.stopPropagation();
-    openBooking(title, price, isSafe);
-}
+function openBookingFromDetail() { const item = itemsData.find(i => i.id === currentDetailId); openBooking(item.title, item.price, item.isSafeZone); }
+function openBookingFromCard(e, title, price, isSafe) { e.stopPropagation(); openBooking(title, price, isSafe); }
 
 // --- UPLOAD & POST ---
 function previewImage() {
@@ -198,13 +219,13 @@ function submitAd() {
         const newItem = { 
             id: Date.now(), title: title, desc: "Ajouté depuis l'application.", city: city, 
             lat: 48.8566, lng: 2.3522, category: cat, price: parseInt(price), likes: 0, 
-            user: "Stan M.", userAvatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80",
+            user: userProfile.username, userAvatar: userProfile.avatar,
             isSafeZone: isSafe, img: imgSrc
         };
         itemsData.unshift(newItem);
         saveData();
         closeModal('modal-post'); 
-        showPage('home'); // On revient à l'accueil pour voir l'ajout
+        showPage('home');
     };
 
     if (file) {
@@ -216,42 +237,14 @@ function submitAd() {
     }
 }
 
-// --- UTILS & CALC ---
-function calculateTotal() {
-    const startInput = document.getElementById('start-date').value;
-    const endInput = document.getElementById('end-date').value;
-    if (startInput && endInput) {
-        const start = new Date(startInput);
-        const end = new Date(endInput);
-        const timeDiff = end - start;
-        let days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-        if (days < 1) days = 1;
-        const total = (days * currentDailyPrice) + 5;
-        document.getElementById('total-days').innerText = days + " jour(s)";
-        document.getElementById('final-total').innerText = total + "€";
-    }
-}
-function openBooking(title, price, isSafe) {
-    currentDailyPrice = price;
-    document.getElementById('price-per-day').innerText = price + "€";
-    document.getElementById('total-days').innerText = "-";
-    document.getElementById('final-total').innerText = "-";
-    document.getElementById('start-date').value = "";
-    document.getElementById('end-date').value = "";
-    document.getElementById('modal-safe-msg').style.display = isSafe ? 'flex' : 'none';
-    document.getElementById('modal-booking').style.display = 'block';
-}
+// --- UTILS ---
+function calculateTotal() { const startInput = document.getElementById('start-date').value; const endInput = document.getElementById('end-date').value; if (startInput && endInput) { const start = new Date(startInput); const end = new Date(endInput); const timeDiff = end - start; let days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); if (days < 1) days = 1; const total = (days * currentDailyPrice) + 5; document.getElementById('total-days').innerText = days + " jour(s)"; document.getElementById('final-total').innerText = total + "€"; } }
+function openBooking(title, price, isSafe) { currentDailyPrice = price; document.getElementById('price-per-day').innerText = price + "€"; document.getElementById('total-days').innerText = "-"; document.getElementById('final-total').innerText = "-"; document.getElementById('start-date').value = ""; document.getElementById('end-date').value = ""; document.getElementById('modal-safe-msg').style.display = isSafe ? 'flex' : 'none'; document.getElementById('modal-booking').style.display = 'block'; }
+function toggleTheme() { const body = document.body; const icon = document.getElementById('theme-icon'); let newTheme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; body.setAttribute('data-theme', newTheme); icon.className = newTheme === 'light' ? 'fa-regular fa-sun' : 'fa-regular fa-moon'; }
 function confirmPayment() { alert("Paiement validé !"); closeModal('modal-booking'); }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 function openCharter() { document.getElementById('modal-charter').style.display = 'block'; }
 function goToPostForm() { closeModal('modal-charter'); document.getElementById('modal-post').style.display = 'block'; }
-function toggleTheme() {
-    const body = document.body;
-    const icon = document.getElementById('theme-icon');
-    let newTheme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    body.setAttribute('data-theme', newTheme);
-    icon.className = newTheme === 'light' ? 'fa-regular fa-sun' : 'fa-regular fa-moon';
-}
 function toggleLike(e, id) { e.stopPropagation(); const item = itemsData.find(i => i.id === id); if(favorites.includes(id)) { favorites = favorites.filter(f => f !== id); item.likes--; } else { favorites.push(id); item.likes++; } saveData(); const active = document.querySelector('.page-section[style*="block"]').id; if(active === 'page-home') renderGrid(itemsData, 'products-grid'); if(active === 'page-profile') renderFavorites(); if(active === 'page-search') renderGrid(itemsData, 'search-results'); }
 function renderFavorites() { const favItems = itemsData.filter(i => favorites.includes(i.id)); const container = document.getElementById('favorites-grid'); if(favItems.length === 0) container.innerHTML = '<p style="text-align:center; color:gray; width:100%;">Aucun favori.</p>'; else renderGrid(favItems, 'favorites-grid'); }
 function filterItems(cat) { document.querySelectorAll('.chip').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); const filtered = cat === 'all' ? itemsData : itemsData.filter(i => i.category === cat); renderGrid(filtered, 'products-grid'); }
@@ -261,5 +254,5 @@ window.onclick = function(e) { if(e.target.classList.contains('modal-backdrop'))
 setTimeout(() => { document.getElementById('notif-dot').style.display = 'block'; document.getElementById('new-msg').style.display = 'flex'; }, 3000);
 function readMessage() { document.getElementById('notif-dot').style.display = 'none'; document.getElementById('new-msg').style.background = 'transparent'; document.querySelector('.unread-circle').style.display = 'none'; }
 
-// INIT
-renderGrid(itemsData, 'products-grid');
+// START
+init();
