@@ -14,10 +14,7 @@
     <div class="ambient-light"></div>
 
     <nav class="minimal-nav">
-        <div class="nav-left">
-            <div class="logo"><span class="logo-text">RentSphere</span><span class="dot"></span></div>
-        </div>
-        
+        <div class="nav-left"><div class="logo">RentSphere</div></div>
         <div class="nav-center">
             <button onclick="showPage('home')" class="nav-link active"><i class="fa-solid fa-house"></i></button>
             <button onclick="showPage('search')" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -27,7 +24,6 @@
             </button>
             <button onclick="showPage('profile')" class="nav-link"><i class="fa-regular fa-user"></i></button>
         </div>
-
         <div class="nav-right">
             <button onclick="toggleTheme()" class="icon-btn"><i id="theme-icon" class="fa-regular fa-moon"></i></button>
             <button onclick="openCharter()" class="btn-solid btn-deposer">
@@ -64,56 +60,34 @@
     <section id="page-product" class="page-section" style="display:none;">
         <div class="container">
             <button onclick="goBack()" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-            
             <div class="product-layout">
                 <div class="left-col">
                     <div class="product-image-container">
                         <img id="detail-img" src="" alt="Produit">
                     </div>
-                    
                     <div id="map-container" style="margin-top: 20px;">
-                        <p class="map-label" style="margin-bottom:10px; color:#888; font-size:13px;">
-                            <i class="fa-solid fa-location-dot"></i> Localisation
-                        </p>
+                        <p class="map-label" style="margin-bottom:10px; color:#888; font-size:13px;"><i class="fa-solid fa-location-dot"></i> Localisation</p>
                         <div id="map"></div>
                     </div>
                 </div>
-
                 <div class="product-info-panel">
                     <div class="product-header">
                         <h2 id="detail-title">Titre</h2>
                         <span id="detail-price" class="detail-price">0€</span>
                     </div>
-                    
-                    <div class="product-meta">
-                        <span id="detail-city">Ville</span>
-                        <span class="divider">•</span>
-                        <span id="detail-cat">Catégorie</span>
-                    </div>
-
+                    <div class="product-meta"><span id="detail-city">Ville</span><span class="divider">•</span><span id="detail-cat">Catégorie</span></div>
                     <div class="separator-line"></div>
-
                     <div id="detail-safe-alert" class="safe-zone-box" style="display:none;">
                         <i class="fa-solid fa-shield-cat"></i>
-                        <div>
-                            <strong>Safe Zone Activée</strong><br>
-                            Remise en main propre obligatoire (Commissariat).
-                        </div>
+                        <div><strong>Safe Zone Activée</strong><br>Remise en main propre obligatoire (Commissariat).</div>
                     </div>
-
                     <p class="section-label">Description</p>
                     <p id="detail-desc" class="product-desc">Description...</p>
-
                     <div class="separator-line"></div>
-
                     <div class="seller-block">
                         <div class="seller-avatar" id="detail-avatar"></div>
-                        <div>
-                            <div id="detail-user" class="seller-name">Nom</div>
-                            <div class="seller-rating">⭐⭐⭐⭐⭐ (42 avis)</div>
-                        </div>
+                        <div><div id="detail-user" class="seller-name">Nom</div><div class="seller-rating">⭐⭐⭐⭐⭐ (42 avis)</div></div>
                     </div>
-
                     <button class="btn-solid full-large" onclick="openBookingFromDetail()">Réserver maintenant</button>
                 </div>
             </div>
@@ -144,34 +118,37 @@
                 </div>
                 <div class="profile-right">
                     <h2>Stan M. <i class="fa-solid fa-circle-check verified-color"></i></h2>
-                    <p class="profile-bio">Membre depuis 2023</p>
+                    <p class="profile-bio">Membre depuis 2023 • Paris</p>
+                    <div class="wallet-badge">
+                        <i class="fa-solid fa-wallet"></i> Solde : <strong>145,00 €</strong>
+                    </div>
                 </div>
             </div>
+
             <div class="tabs-minimal">
-                <button class="tab-link active" onclick="switchTab('reviews')">Avis</button>
-                <button class="tab-link" onclick="switchTab('favs')">Favoris</button>
+                <button class="tab-link active" onclick="switchTab('listings')">Mes Annonces</button>
+                <button class="tab-link" onclick="switchTab('favs')">Mes Favoris</button>
+                <button class="tab-link" onclick="switchTab('reviews')">Avis (42)</button>
             </div>
-            <div id="tab-reviews" class="tab-content"><div id="reviews-list"></div></div>
-            <div id="tab-favs" class="tab-content" style="display:none;"><div id="favorites-grid" class="grid-clean"></div></div>
+
+            <div id="tab-listings" class="tab-content">
+                <div id="mylistings-grid" class="grid-clean"></div>
+            </div>
+            
+            <div id="tab-favs" class="tab-content" style="display:none;">
+                <div id="favorites-grid" class="grid-clean"></div>
+            </div>
+
+            <div id="tab-reviews" class="tab-content" style="display:none;">
+                <div id="reviews-list"></div>
+            </div>
         </div>
     </section>
 
     <div id="modal-post" class="modal-backdrop">
         <div class="modal-box">
-            <div class="modal-header">
-                <h3>Nouvelle annonce</h3>
-                <button class="close-icon" onclick="closeModal('modal-post')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="input-wrap">
-                <label>Photo</label>
-                <div class="file-upload-wrapper">
-                    <label for="post-file" class="file-upload-btn">
-                        <i class="fa-solid fa-camera"></i> Choisir une photo
-                    </label>
-                    <input type="file" id="post-file" accept="image/*" onchange="previewImage()">
-                </div>
-                <img id="preview-img" src="" style="display:none;" class="img-preview-box">
-            </div>
+            <div class="modal-header"><h3>Nouvelle annonce</h3><button class="close-icon" onclick="closeModal('modal-post')"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="input-wrap"><label>Photo</label><div class="file-upload-wrapper"><label for="post-file" class="file-upload-btn"><i class="fa-solid fa-camera"></i> Choisir une photo</label><input type="file" id="post-file" accept="image/*" onchange="previewImage()"></div><img id="preview-img" src="" style="display:none;" class="img-preview-box"></div>
             <div class="input-wrap"><label>Titre</label><input type="text" id="post-title" placeholder="Ex: Vélo..."></div>
             <div class="input-wrap"><label>Ville</label><input type="text" id="post-city" placeholder="Ex: Paris"></div>
             <div class="input-wrap"><label>Prix / jour</label><input type="number" id="post-price" placeholder="0"></div>
@@ -180,34 +157,8 @@
         </div>
     </div>
 
-    <div id="modal-charter" class="modal-backdrop">
-        <div class="modal-box">
-            <div class="modal-header"><h3>Règles</h3><button class="close-icon" onclick="closeModal('modal-charter')"><i class="fa-solid fa-xmark"></i></button></div>
-            <ul class="clean-list"><li>Pas de contrefaçon</li><li>Safe Zone obligatoire pour le luxe</li></ul>
-            <button class="btn-solid full" onclick="goToPostForm()">Accepter</button>
-        </div>
-    </div>
-
-    <div id="modal-booking" class="modal-backdrop">
-        <div class="modal-box">
-            <div class="modal-header"><h3>Dates & Paiement</h3><button class="close-icon" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button></div>
-            <div class="date-grid">
-                <div class="input-wrap"><label>Début</label><input type="date" id="start-date" onchange="calculateTotal()"></div>
-                <div class="input-wrap"><label>Fin</label><input type="date" id="end-date" onchange="calculateTotal()"></div>
-            </div>
-            <div class="booking-details">
-                <div class="detail-row"><span>Prix journalier</span><span id="price-per-day">0€</span></div>
-                <div class="detail-row"><span>Durée</span><span id="total-days">1 jour</span></div>
-                <div class="detail-row"><span>Frais de service</span><span>5€</span></div>
-                <div class="separator-line"></div>
-                <div class="detail-row total-row"><span>Total</span><span id="final-total">0€</span></div>
-            </div>
-            <div id="modal-safe-msg" class="safe-zone-box" style="display:none; margin-bottom:20px;">
-                <i class="fa-solid fa-building-shield"></i> <strong>Safe Zone :</strong> RDV sécurisé obligatoire.
-            </div>
-            <button class="btn-solid full" onclick="confirmPayment()">Confirmer</button>
-        </div>
-    </div>
+    <div id="modal-charter" class="modal-backdrop"><div class="modal-box"><div class="modal-header"><h3>Règles</h3><button class="close-icon" onclick="closeModal('modal-charter')"><i class="fa-solid fa-xmark"></i></button></div><ul class="clean-list"><li>Pas de contrefaçon</li><li>Safe Zone obligatoire pour le luxe</li></ul><button class="btn-solid full" onclick="goToPostForm()">Accepter</button></div></div>
+    <div id="modal-booking" class="modal-backdrop"><div class="modal-box"><div class="modal-header"><h3>Dates & Paiement</h3><button class="close-icon" onclick="closeModal('modal-booking')"><i class="fa-solid fa-xmark"></i></button></div><div class="date-grid"><div class="input-wrap"><label>Début</label><input type="date" id="start-date" onchange="calculateTotal()"></div><div class="input-wrap"><label>Fin</label><input type="date" id="end-date" onchange="calculateTotal()"></div></div><div class="booking-details"><div class="detail-row"><span>Prix journalier</span><span id="price-per-day">0€</span></div><div class="detail-row"><span>Durée</span><span id="total-days">1 jour</span></div><div class="detail-row"><span>Frais de service</span><span>5€</span></div><div class="separator-line"></div><div class="detail-row total-row"><span>Total</span><span id="final-total">0€</span></div></div><div id="modal-safe-msg" class="safe-zone-box" style="display:none; margin-bottom:20px;"><i class="fa-solid fa-building-shield"></i> <strong>Safe Zone :</strong> RDV sécurisé obligatoire.</div><button class="btn-solid full" onclick="confirmPayment()">Confirmer</button></div></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="script.js"></script>

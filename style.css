@@ -33,8 +33,6 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 /* NAV */
 .minimal-nav { position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
 .logo { font-weight: 500; font-size: 18px; letter-spacing: -0.5px; }
-.dot { display:inline-block; width:6px; height:6px; background:var(--accent); border-radius:50%; margin-left:3px; }
-
 .nav-center { display: flex; gap: 8px; background: var(--surface); padding: 4px; border-radius: 50px; border: 1px solid var(--border); }
 .nav-link { background: transparent; border: none; color: var(--text-dim); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
 .nav-link:hover { color: var(--text); background: var(--surface-hover); }
@@ -44,7 +42,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .btn-solid { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 400; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
 .btn-solid:hover { opacity: 0.9; }
 
-/* LAYOUT */
+/* LAYOUT & HERO */
 .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 .page-section { padding-top: 40px; }
 .hero-minimal { text-align: center; margin-bottom: 40px; }
@@ -71,9 +69,19 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .btn-card-action { width: 100%; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 8px; margin-top: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; transition: 0.2s; }
 .btn-card-action:hover { background: var(--text); color: var(--bg); }
 
-/* SAFE ZONE */
-.safe-zone-box { background: var(--safe-bg); border: 1px solid var(--safe-text); color: var(--safe-text); padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; line-height: 1.5; }
-.safe-icon-card { font-size: 12px; color: var(--safe-text); }
+/* BOUTON SUPPRIMER (POUR MES ANNONCES) */
+.btn-delete { border-color: var(--danger); color: var(--danger); }
+.btn-delete:hover { background: var(--danger); color: white; }
+
+/* PROFIL (VINTED STYLE) */
+.profile-minimal { display: flex; gap: 20px; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
+.profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+.verified-color { color: var(--accent); font-size: 16px; }
+.wallet-badge { display: inline-block; margin-top: 10px; background: var(--surface); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); font-size: 14px; }
+.wallet-badge i { color: var(--accent); margin-right: 5px; }
+.tabs-minimal { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.tab-link { background: none; border: none; font-size: 14px; color: var(--text-dim); padding-bottom: 10px; cursor: pointer; }
+.tab-link.active { color: var(--text); border-bottom: 1px solid var(--text); }
 
 /* PRODUCT DETAIL & MAP */
 .back-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
@@ -81,10 +89,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
 .product-image-container { border-radius: 12px; overflow: hidden; background: var(--surface); height: 400px; margin-bottom: 20px; }
 .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
-
-/* Carte */
 #map { width: 100%; height: 250px; border-radius: 12px; border: 1px solid var(--border); z-index: 1; }
-
 .product-header h2 { font-weight: 500; font-size: 28px; margin: 0 0 10px 0; }
 .detail-price { font-size: 24px; font-weight: 600; color: var(--text); }
 .product-meta { color: var(--text-dim); font-size: 14px; margin-bottom: 20px; }
@@ -96,25 +101,19 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .seller-name { font-weight: 500; font-size: 15px; }
 .seller-rating { font-size: 12px; color: var(--text-dim); }
 .full-large { width: 100%; padding: 15px; font-size: 16px; margin-top: 20px; }
+.safe-zone-box { background: var(--safe-bg); border: 1px solid var(--safe-text); color: var(--safe-text); padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; line-height: 1.5; }
+.safe-icon-card { font-size: 12px; color: var(--safe-text); }
 
-/* DATE PICKER */
+/* DATE PICKER & BOOKING */
 .date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
 .booking-details { background: var(--surface); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
 .detail-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
 .total-row { font-weight: 600; font-size: 18px; color: var(--text); margin-top: 15px; }
 
-/* PROFIL & SEARCH */
-.profile-minimal { display: flex; gap: 20px; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
-.profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
-.verified-color { color: var(--accent); font-size: 16px; }
-.tabs-minimal { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-.tab-link { background: none; border: none; font-size: 14px; color: var(--text-dim); padding-bottom: 10px; cursor: pointer; }
-.tab-link.active { color: var(--text); border-bottom: 1px solid var(--text); }
+/* SEARCH & CHAT & MODALS */
 .search-block { position: relative; margin-bottom: 30px; }
 .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-dim); }
 #search-input { width: 100%; padding: 12px 12px 12px 40px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; font-size: 15px; box-sizing: border-box; outline: none; }
-
-/* MODALS */
 .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 2000; }
 .modal-box { background: var(--bg); border: 1px solid var(--border); width: 90%; max-width: 400px; margin: 15vh auto; padding: 25px; border-radius: 12px; color: var(--text); box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
 .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
@@ -135,27 +134,18 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .file-upload-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.05); }
 .img-preview-box { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border); }
 
-/* --- RESPONSIVE FIX (MOBILE) --- */
+/* MOBILE */
 @media (max-width: 768px) {
     .minimal-nav { padding: 10px 15px; width: 100%; box-sizing: border-box; }
-    .logo-text { display: none; } /* Cache le mot RentSphere */
+    .logo-text { display: none; }
     .nav-center { gap: 2px; }
     .nav-link { width: 35px; height: 35px; font-size: 14px; }
-    
-    /* LE BOUTON "+" ROND */
-    .btn-text { display: none; } /* Cache le mot Déposer */
-    .btn-solid { 
-        width: 35px; height: 35px; padding: 0; 
-        border-radius: 50%; /* Rond parfait */
-        justify-content: center; 
-    }
-    
+    .btn-text { display: none; }
+    .btn-solid { width: 35px; height: 35px; padding: 0; border-radius: 50%; justify-content: center; }
     .icon-btn { width: 35px; height: 35px; }
     .nav-right { gap: 5px; }
-    
-    .card-img-wrap { aspect-ratio: 16 / 9; } /* Images moins hautes */
+    .card-img-wrap { aspect-ratio: 16 / 9; }
     .grid-clean { gap: 15px; }
-    
     .product-layout { grid-template-columns: 1fr; gap: 20px; }
     .product-image-container { height: 250px; }
 }
