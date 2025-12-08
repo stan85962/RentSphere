@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 </head>
 <body data-theme="dark">
@@ -15,7 +14,10 @@
     <div class="ambient-light"></div>
 
     <nav class="minimal-nav">
-        <div class="nav-left"><div class="logo">RentSphere</div></div>
+        <div class="nav-left">
+            <div class="logo"><span class="logo-text">RentSphere</span><span class="dot"></span></div>
+        </div>
+        
         <div class="nav-center">
             <button onclick="showPage('home')" class="nav-link active"><i class="fa-solid fa-house"></i></button>
             <button onclick="showPage('search')" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -25,9 +27,12 @@
             </button>
             <button onclick="showPage('profile')" class="nav-link"><i class="fa-regular fa-user"></i></button>
         </div>
+
         <div class="nav-right">
             <button onclick="toggleTheme()" class="icon-btn"><i id="theme-icon" class="fa-regular fa-moon"></i></button>
-            <button onclick="openCharter()" class="btn-solid">Déposer</button>
+            <button onclick="openCharter()" class="btn-solid btn-deposer">
+                <i class="fa-solid fa-plus"></i> <span class="btn-text">Déposer</span>
+            </button>
         </div>
     </nav>
 
@@ -67,7 +72,9 @@
                     </div>
                     
                     <div id="map-container" style="margin-top: 20px;">
-                        <p class="map-label" style="margin-bottom:10px; color:#888; font-size:13px;"><i class="fa-solid fa-location-dot"></i> Localisation du bien</p>
+                        <p class="map-label" style="margin-bottom:10px; color:#888; font-size:13px;">
+                            <i class="fa-solid fa-location-dot"></i> Localisation
+                        </p>
                         <div id="map"></div>
                     </div>
                 </div>

@@ -33,6 +33,8 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 /* NAV */
 .minimal-nav { position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
 .logo { font-weight: 500; font-size: 18px; letter-spacing: -0.5px; }
+.dot { display:inline-block; width:6px; height:6px; background:var(--accent); border-radius:50%; margin-left:3px; }
+
 .nav-center { display: flex; gap: 8px; background: var(--surface); padding: 4px; border-radius: 50px; border: 1px solid var(--border); }
 .nav-link { background: transparent; border: none; color: var(--text-dim); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
 .nav-link:hover { color: var(--text); background: var(--surface-hover); }
@@ -77,7 +79,6 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .back-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
 .back-btn:hover { color: var(--text); }
 .product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-@media (max-width: 768px) { .product-layout { grid-template-columns: 1fr; } }
 .product-image-container { border-radius: 12px; overflow: hidden; background: var(--surface); height: 400px; margin-bottom: 20px; }
 .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -134,18 +135,27 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 .file-upload-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(59, 130, 246, 0.05); }
 .img-preview-box { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border); }
 
-/* MOBILE */
+/* --- RESPONSIVE FIX (MOBILE) --- */
 @media (max-width: 768px) {
     .minimal-nav { padding: 10px 15px; width: 100%; box-sizing: border-box; }
-    .logo-text { display: none; }
+    .logo-text { display: none; } /* Cache le mot RentSphere */
     .nav-center { gap: 2px; }
     .nav-link { width: 35px; height: 35px; font-size: 14px; }
-    .btn-text { display: none; }
-    .btn-solid { width: 35px; height: 35px; padding: 0; border-radius: 50%; justify-content: center; }
+    
+    /* LE BOUTON "+" ROND */
+    .btn-text { display: none; } /* Cache le mot Déposer */
+    .btn-solid { 
+        width: 35px; height: 35px; padding: 0; 
+        border-radius: 50%; /* Rond parfait */
+        justify-content: center; 
+    }
+    
     .icon-btn { width: 35px; height: 35px; }
     .nav-right { gap: 5px; }
-    .card-img-wrap { aspect-ratio: 16 / 9; }
+    
+    .card-img-wrap { aspect-ratio: 16 / 9; } /* Images moins hautes */
     .grid-clean { gap: 15px; }
+    
     .product-layout { grid-template-columns: 1fr; gap: 20px; }
     .product-image-container { height: 250px; }
 }
